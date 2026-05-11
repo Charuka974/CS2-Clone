@@ -1,0 +1,292 @@
+  body {
+      margin: 0;
+      padding: 1.5rem 0;
+      font-family: var(--font-sans);
+  }
+
+  .section {
+      margin-bottom: 2.5rem;
+  }
+
+  .section-title {
+      font-size: 18px;
+      font-weight: 500;
+      margin: 0 0 1rem;
+      color: var(--color-text-primary);
+  }
+
+  .card {
+      background: var(--color-background-primary);
+      border: 0.5px solid var(--color-border-tertiary);
+      border-radius: var(--border-radius-lg);
+      padding: 1rem 1.25rem;
+      margin-bottom: 12px;
+  }
+
+  .card-title {
+      font-size: 15px;
+      font-weight: 500;
+      margin: 0 0 8px;
+      color: var(--color-text-primary);
+  }
+
+  .card-text {
+      font-size: 14px;
+      margin: 0;
+      line-height: 1.6;
+      color: var(--color-text-secondary);
+  }
+
+  .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(0, 1fr));
+      gap: 12px;
+  }
+
+  .grid-3 {
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  }
+
+  .metric-card {
+      background: var(--color-background-secondary);
+      border-radius: var(--border-radius-md);
+      padding: 1rem;
+      text-align: center;
+  }
+
+  .metric-label {
+      font-size: 13px;
+      color: var(--color-text-secondary);
+      margin: 0 0 4px;
+  }
+
+  .metric-value {
+      font-size: 24px;
+      font-weight: 500;
+      margin: 0;
+      color: var(--color-text-primary);
+  }
+
+  .badge {
+      display: inline-block;
+      padding: 4px 10px;
+      border-radius: var(--border-radius-md);
+      font-size: 12px;
+      font-weight: 500;
+      margin-right: 6px;
+      margin-bottom: 6px;
+  }
+
+  .badge-purple {
+      background: var(--color-background-info);
+      color: var(--color-text-info);
+  }
+
+  .badge-green {
+      background: var(--color-background-success);
+      color: var(--color-text-success);
+  }
+
+  .badge-amber {
+      background: var(--color-background-warning);
+      color: var(--color-text-warning);
+  }
+
+  .step {
+      margin-bottom: 1rem;
+      padding: 1rem;
+      background: var(--color-background-secondary);
+      border-radius: var(--border-radius-md);
+      border-left: 3px solid var(--color-border-info);
+  }
+
+  .step-num {
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--color-text-info);
+      margin: 0 0 4px;
+  }
+
+  .step-title {
+      font-size: 15px;
+      font-weight: 500;
+      margin: 0 0 6px;
+      color: var(--color-text-primary);
+  }
+
+  .step-desc {
+      font-size: 14px;
+      margin: 0;
+      color: var(--color-text-secondary);
+      line-height: 1.6;
+  }
+
+  .tool-item {
+      font-size: 13px;
+      padding: 6px 0;
+      color: var(--color-text-secondary);
+      border-bottom: 0.5px solid var(--color-border-tertiary);
+  }
+
+  .tool-item:last-child {
+      border-bottom: none;
+  }
+
+  .tool-name {
+      font-weight: 500;
+      color: var(--color-text-primary);
+  }
+
+  button {
+      margin-top: 8px;
+      padding: 8px 14px;
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      border-radius: var(--border-radius-md);
+  }
+
+  .niche-selector {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 8px;
+      margin-top: 12px;
+  }
+
+  .niche-btn {
+      padding: 12px;
+      text-align: center;
+      background: var(--color-background-secondary);
+      border: 1px solid var(--color-border-tertiary);
+      border-radius: var(--border-radius-md);
+      cursor: pointer;
+      transition: all 0.2s;
+      font-size: 14px;
+  }
+
+  .niche-btn:hover {
+      border-color: var(--color-border-info);
+      background: var(--color-background-info);
+  }
+
+  .timeline {
+      position: relative;
+  }
+
+  .timeline-item {
+      position: relative;
+      padding-left: 2rem;
+      padding-bottom: 1.5rem;
+      border-left: 2px solid var(--color-border-tertiary);
+  }
+
+  .timeline-item:last-child {
+      border-left-color: transparent;
+  }
+
+  .timeline-dot {
+      position: absolute;
+      left: -6px;
+      top: 4px;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--color-background-info);
+      border: 2px solid var(--color-border-info);
+  }
+
+  .timeline-title {
+      font-size: 14px;
+      font-weight: 500;
+      margin: 0 0 4px;
+      color: var(--color-text-primary);
+  }
+
+  .timeline-desc {
+      font-size: 13px;
+      margin: 0;
+      color: var(--color-text-secondary);
+      line-height: 1.6;
+  }
+
+  .revenue-calc {
+      background: var(--color-background-secondary);
+      padding: 1.25rem;
+      border-radius: var(--border-radius-lg);
+      margin-top: 12px;
+  }
+
+  .slider-group {
+      margin: 1rem 0;
+  }
+
+  .slider-label {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+  }
+
+  .slider-label-text {
+      font-size: 14px;
+      color: var(--color-text-secondary);
+  }
+
+  .slider-value {
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--color-text-primary);
+  }
+
+  input[type="range"] {
+      width: 100%;
+  }
+
+  .revenue-result {
+      text-align: center;
+      margin-top: 1.5rem;
+      padding: 1.5rem;
+      background: var(--color-background-primary);
+      border-radius: var(--border-radius-md);
+      border: 1px solid var(--color-border-tertiary);
+  }
+
+  .revenue-amount {
+      font-size: 32px;
+      font-weight: 500;
+      color: var(--color-text-success);
+      margin: 0;
+  }
+
+  .revenue-label {
+      font-size: 13px;
+      color: var(--color-text-secondary);
+      margin: 8px 0 0;
+  }
+
+  .breakdown {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin-top: 12px;
+  }
+
+  .breakdown-item {
+      text-align: center;
+      padding: 8px;
+      background: var(--color-background-secondary);
+      border-radius: var(--border-radius-md);
+  }
+
+  .breakdown-value {
+      font-size: 16px;
+      font-weight: 500;
+      color: var(--color-text-primary);
+      margin: 0;
+  }
+
+  .breakdown-label {
+      font-size: 11px;
+      color: var(--color-text-secondary);
+      margin: 4px 0 0;
+  }

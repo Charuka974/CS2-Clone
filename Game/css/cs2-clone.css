@@ -1,0 +1,273 @@
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Courier New', monospace;
+        }
+
+        body {
+            overflow: hidden;
+            background: #0a0a0a;
+        }
+
+        #gameCanvas {
+            display: block;
+            width: 100vw;
+            height: 100vh;
+        }
+
+        /* Menu System */
+        #mainMenu {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+
+        #mainMenu h1 {
+            font-size: 72px;
+            color: #ff6b35;
+            text-shadow: 0 0 20px rgba(255, 107, 53, 0.5);
+            margin-bottom: 50px;
+            letter-spacing: 8px;
+        }
+
+        .menu-button {
+            background: linear-gradient(135deg, #ff6b35 0%, #f7931e 100%);
+            border: none;
+            padding: 20px 60px;
+            margin: 15px;
+            font-size: 24px;
+            color: white;
+            cursor: pointer;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            box-shadow: 0 8px 15px rgba(255, 107, 53, 0.3);
+        }
+
+        .menu-button:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 25px rgba(255, 107, 53, 0.5);
+        }
+
+        .menu-button:active {
+            transform: translateY(-2px);
+        }
+
+        /* HUD System */
+        #hud {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 95%;
+            display: none;
+            align-items: flex-end;
+            justify-content: space-between;
+            z-index: 100;
+            pointer-events: none;
+        }
+
+        .hud-panel {
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 107, 53, 0.3);
+            padding: 15px 25px;
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+        }
+
+        #healthBar {
+            border-left: 5px solid #00ff88;
+            background: rgba(0, 0, 0, 0.6);
+            padding-right: 40px;
+        }
+
+        .hp-icon {
+            font-size: 28px;
+            color: #00ff88;
+            filter: drop-shadow(0 0 8px rgba(0, 255, 136, 0.6));
+        }
+
+        /* Serious pulse effect for low health */
+        @keyframes danger-pulse {
+            0% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.5; transform: scale(1.1); color: #ff0000; }
+            100% { opacity: 1; transform: scale(1); }
+        }
+
+        .low-health-warning {
+            animation: danger-pulse 0.8s infinite;
+            color: #ff0000 !important;
+        }
+        #ammoDisplay { border-right: 5px solid #ff6b35; text-align: right; }
+
+        #healthText {
+            font-size: 42px;
+            color: #00ff88;
+            font-weight: 900;
+            margin-left: 15px;
+        }
+
+        .weapon-container {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .weapon-img {
+            height: 60px; /* Adjust based on image aspect ratio */
+            width: auto;
+            filter: drop-shadow(0 0 5px rgba(255, 255, 255, 0.5));
+        }
+
+        #currentAmmo { font-size: 42px; color: #ffffff; }
+        #reserveAmmo { font-size: 18px; color: #ff6b35; }
+
+        /* Add a scanline effect for the futuristic look */
+        #hud::before {
+            content: "";
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-size: 100% 2px, 3px 100%;
+            pointer-events: none;
+        }
+
+        /* Crosshair */
+        #crosshair {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 20px;
+            height: 20px;
+            display: none;
+            z-index: 50;
+        }
+
+        #crosshair::before,
+        #crosshair::after {
+            content: '';
+            position: absolute;
+            background: rgba(0, 255, 0, 0.8);
+        }
+
+        #crosshair::before {
+            width: 2px;
+            height: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        #crosshair::after {
+            width: 20px;
+            height: 2px;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+
+        /* Kill Feed */
+        #killFeed {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            width: 350px;
+            max-height: 300px;
+            overflow: hidden;
+            z-index: 90;
+            display: none;
+        }
+
+        .kill-message {
+            background: rgba(0, 0, 0, 0.7);
+            padding: 12px 20px;
+            margin-bottom: 8px;
+            border-left: 4px solid #ff6b35;
+            color: white;
+            font-size: 16px;
+            animation: slideIn 0.3s ease;
+            border-radius: 5px;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(400px);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        /* Reloading Indicator */
+        #reloadIndicator {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 32px;
+            color: #ff6b35;
+            font-weight: bold;
+            text-shadow: 0 0 10px rgba(255, 107, 53, 0.8);
+            display: none;
+            z-index: 60;
+            animation: pulse 0.5s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        /* Loading Screen */
+        #loadingScreen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #0a0a0a;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+        }
+
+        #loadingScreen h2 {
+            font-size: 36px;
+            color: #ff6b35;
+            animation: pulse 1s infinite;
+        }
+
+        /* Death Screen */
+        #deathScreen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 0, 0, 0.3);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 150;
+        }
+
+        #deathScreen h2 {
+            font-size: 72px;
+            color: #ff0000;
+            text-shadow: 0 0 30px rgba(255, 0, 0, 0.8);
+        }

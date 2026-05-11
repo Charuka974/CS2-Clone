@@ -1,0 +1,491 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta ai />
+  <title>AI-Powered YouTube Channel Strategy Blueprint</title>
+  <link rel="stylesheet" href="/Ideas/css/index.css" />
+  <link rel="stylesheet" href="/Ideas/css/indexextra.css" />
+</head>
+
+<body>
+  <div class="section">
+    <h2 class="section-title">Choose your niche</h2>
+    <div class="card">
+      <p class="card-text" style="margin-bottom: 12px">
+        Select a niche that works well with AI tools and has proven
+        monetization potential:
+      </p>
+      <div class="niche-selector" id="nicheSelector">
+        <button class="niche-btn" onclick="selectNiche('faceless')">
+          📱 Faceless content
+        </button>
+        <button class="niche-btn" onclick="selectNiche('tutorials')">
+          🎓 AI tutorials
+        </button>
+        <button class="niche-btn" onclick="selectNiche('stories')">
+          📖 Story channels
+        </button>
+        <button class="niche-btn" onclick="selectNiche('finance')">
+          💰 Finance explained
+        </button>
+        <button class="niche-btn" onclick="selectNiche('productivity')">
+          ⚡ Productivity
+        </button>
+        <button class="niche-btn" onclick="selectNiche('history')">
+          🏛️ History stories
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="section" id="nicheDetails" style="display: none">
+    <h2 class="section-title">
+      Your niche: <span id="selectedNiche"></span>
+    </h2>
+    <div class="card">
+      <div class="card-title">Why this works</div>
+      <p class="card-text" id="nicheReason"></p>
+    </div>
+    <div class="grid grid-3" style="margin-top: 12px">
+      <div class="metric-card">
+        <p class="metric-label">Production time</p>
+        <p class="metric-value" id="prodTime">—</p>
+      </div>
+      <div class="metric-card">
+        <p class="metric-label">Startup cost</p>
+        <p class="metric-value" id="startCost">—</p>
+      </div>
+      <div class="metric-card">
+        <p class="metric-label">Skill level</p>
+        <p class="metric-value" id="skillLevel">—</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2 class="section-title">AI production workflow</h2>
+    <div class="step">
+      <p class="step-num">Step 1</p>
+      <p class="step-title">Script generation</p>
+      <p class="step-desc">
+        Use ChatGPT or Claude to generate video scripts. Provide a topic,
+        target length, and tone. Ask for hooks, B-roll suggestions, and CTAs.
+      </p>
+      <div style="margin-top: 8px">
+        <span class="badge badge-purple">ChatGPT</span>
+        <span class="badge badge-purple">Claude</span>
+        <span class="badge badge-purple">Jasper</span>
+      </div>
+    </div>
+
+    <div class="step">
+      <p class="step-num">Step 2</p>
+      <p class="step-title">Voice over generation</p>
+      <p class="step-desc">
+        Convert scripts to natural-sounding voiceovers. Choose voices that
+        match your brand and test multiple options.
+      </p>
+      <div style="margin-top: 8px">
+        <span class="badge badge-purple">ElevenLabs</span>
+        <span class="badge badge-purple">Murf.ai</span>
+        <span class="badge badge-purple">Play.ht</span>
+      </div>
+    </div>
+
+    <div class="step">
+      <p class="step-num">Step 3</p>
+      <p class="step-title">Visual content</p>
+      <p class="step-desc">
+        Generate images, video clips, or animations. Combine stock footage
+        with AI-generated visuals for variety.
+      </p>
+      <div style="margin-top: 8px">
+        <span class="badge badge-purple">Midjourney</span>
+        <span class="badge badge-purple">DALL-E</span>
+        <span class="badge badge-purple">Runway ML</span>
+        <span class="badge badge-purple">Pexels (stock)</span>
+      </div>
+    </div>
+
+    <div class="step">
+      <p class="step-num">Step 4</p>
+      <p class="step-title">Video editing</p>
+      <p class="step-desc">
+        Assemble everything with AI-assisted editing tools. Add captions,
+        transitions, and music automatically.
+      </p>
+      <div style="margin-top: 8px">
+        <span class="badge badge-purple">Descript</span>
+        <span class="badge badge-purple">Pictory</span>
+        <span class="badge badge-purple">InVideo AI</span>
+        <span class="badge badge-purple">CapCut</span>
+      </div>
+    </div>
+
+    <div class="step">
+      <p class="step-num">Step 5</p>
+      <p class="step-title">Thumbnails & titles</p>
+      <p class="step-desc">
+        Create eye-catching thumbnails and optimize titles for CTR. Test
+        variations using analytics.
+      </p>
+      <div style="margin-top: 8px">
+        <span class="badge badge-purple">Canva AI</span>
+        <span class="badge badge-purple">Thumbnail AI</span>
+        <span class="badge badge-purple">TubeBuddy</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2 class="section-title">Growth timeline (0 to monetization)</h2>
+    <div class="timeline">
+      <div class="timeline-item">
+        <div class="timeline-dot"></div>
+        <p class="timeline-title">Month 1-2: Foundation</p>
+        <p class="timeline-desc">
+          Post 2-3 videos per week. Test different formats, thumbnails, and
+          titles. Focus on learning what resonates. Goal: 100 subscribers.
+        </p>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-dot"></div>
+        <p class="timeline-title">Month 3-4: Optimization</p>
+        <p class="timeline-desc">
+          Double down on what works. Improve production quality. Start
+          building a content calendar. Goal: 500 subscribers, 2000 watch
+          hours.
+        </p>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-dot"></div>
+        <p class="timeline-title">Month 5-6: Monetization</p>
+        <p class="timeline-desc">
+          Reach 1,000 subscribers and 4,000 watch hours to enable ads. Apply
+          for YouTube Partner Program. Add affiliate links in descriptions.
+        </p>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-dot"></div>
+        <p class="timeline-title">Month 7-12: Scale</p>
+        <p class="timeline-desc">
+          Increase posting frequency with AI automation. Diversify income:
+          sponsorships, digital products, memberships. Goal: 10K+ subscribers.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2 class="section-title">Revenue calculator</h2>
+    <div class="revenue-calc">
+      <div class="slider-group">
+        <div class="slider-label">
+          <span class="slider-label-text">Monthly videos</span>
+          <span class="slider-value" id="videoCount">12</span>
+        </div>
+        <input type="range" min="4" max="60" value="12" step="1" id="videoSlider" />
+      </div>
+
+      <div class="slider-group">
+        <div class="slider-label">
+          <span class="slider-label-text">Avg views per video</span>
+          <span class="slider-value" id="viewCount">5,000</span>
+        </div>
+        <input type="range" min="1000" max="50000" value="5000" step="1000" id="viewSlider" />
+      </div>
+
+      <div class="slider-group">
+        <div class="slider-label">
+          <span class="slider-label-text">CPM (ad revenue per 1K views)</span>
+          <span class="slider-value" id="cpmValue">$4</span>
+        </div>
+        <input type="range" min="2" max="15" value="4" step="0.5" id="cpmSlider" />
+      </div>
+
+      <div class="revenue-result">
+        <p class="revenue-amount" id="totalRevenue">$240</p>
+        <p class="revenue-label">Estimated monthly revenue</p>
+        <div class="breakdown">
+          <div class="breakdown-item">
+            <p class="breakdown-value" id="adRevenue">$240</p>
+            <p class="breakdown-label">Ad revenue</p>
+          </div>
+          <div class="breakdown-item">
+            <p class="breakdown-value" id="affiliateRevenue">$150</p>
+            <p class="breakdown-label">Affiliates (est)</p>
+          </div>
+          <div class="breakdown-item">
+            <p class="breakdown-value" id="totalMonthly">$390</p>
+            <p class="breakdown-label">Total monthly</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2 class="section-title">Content ideas (AI-friendly)</h2>
+    <div class="grid">
+      <div class="card">
+        <div class="card-title">Top 10 lists</div>
+        <p class="card-text">
+          Compile rankings with AI research. Add voiceover and stock footage.
+          Fast to produce, high engagement.
+        </p>
+        <button onclick="sendPrompt('Give me 10 top 10 list ideas for my niche')">
+          Generate ideas ↗
+        </button>
+      </div>
+      <div class="card">
+        <div class="card-title">Explainer videos</div>
+        <p class="card-text">
+          Break down complex topics into simple guides. AI generates script,
+          visuals, and narration automatically.
+        </p>
+        <button onclick="
+              sendPrompt('Create a script for a 5-minute explainer video')
+            ">
+          Create script ↗
+        </button>
+      </div>
+      <div class="card">
+        <div class="card-title">Story narrations</div>
+        <p class="card-text">
+          True crime, history, mystery, or motivational stories. AI writes and
+          narrates, you add visuals.
+        </p>
+        <button onclick="sendPrompt('Give me 5 viral story concepts')">
+          Get story ideas ↗
+        </button>
+      </div>
+      <div class="card">
+        <div class="card-title">Product reviews</div>
+        <p class="card-text">
+          Review products via AI analysis of specs and user reviews. Monetize
+          with affiliate links.
+        </p>
+        <button onclick="
+              sendPrompt('How do I create product review videos with AI?')
+            ">
+          Learn how ↗
+        </button>
+      </div>
+      <div class="card">
+        <div class="card-title">Tutorial content</div>
+        <p class="card-text">
+          Step-by-step guides on software, skills, or processes. Screen
+          recordings + AI voiceover.
+        </p>
+        <button onclick="sendPrompt('What tutorial topics are trending right now?')">
+          Find topics ↗
+        </button>
+      </div>
+      <div class="card">
+        <div class="card-title">Compilation videos</div>
+        <p class="card-text">
+          Curate and comment on trending clips. AI generates commentary and
+          edits timing.
+        </p>
+        <button onclick="
+              sendPrompt('Show me copyright-safe compilation strategies')
+            ">
+          Learn more ↗
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2 class="section-title">Monetization streams</h2>
+    <div class="grid">
+      <div class="card">
+        <div class="card-title">1. YouTube ads</div>
+        <p class="card-text">
+          Revenue from ads shown on your videos. Requires 1,000 subscribers
+          and 4,000 watch hours in past 12 months.
+        </p>
+        <span class="badge badge-green">Passive income</span>
+      </div>
+      <div class="card">
+        <div class="card-title">2. Affiliate marketing</div>
+        <p class="card-text">
+          Promote products in your niche. Earn commissions on sales. Works
+          from day one, no subscriber minimum.
+        </p>
+        <span class="badge badge-green">Start immediately</span>
+      </div>
+      <div class="card">
+        <div class="card-title">3. Sponsored content</div>
+        <p class="card-text">
+          Brands pay for dedicated videos. Typical rates: $100-$2,000+ per
+          video depending on views and niche.
+        </p>
+        <span class="badge badge-amber">10K+ subs</span>
+      </div>
+      <div class="card">
+        <div class="card-title">4. Digital products</div>
+        <p class="card-text">
+          Sell courses, templates, or guides related to your content. High
+          margin, fully automated with the right setup.
+        </p>
+        <span class="badge badge-green">High margin</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2 class="section-title">Weekly production checklist</h2>
+    <div class="card">
+      <div style="display: grid; gap: 8px">
+        <label style="
+              display: flex;
+              align-items: center;
+              gap: 8px;
+              padding: 8px;
+              border-radius: var(--border-radius-md);
+              cursor: pointer;
+              font-size: 14px;
+            " onmouseover="
+              this.style.background = 'var(--color-background-secondary)'
+            " onmouseout="this.style.background = 'transparent'">
+          <input type="checkbox" />
+          <span>Research trending topics in your niche (15 min)</span>
+        </label>
+        <label style="
+              display: flex;
+              align-items: center;
+              gap: 8px;
+              padding: 8px;
+              border-radius: var(--border-radius-md);
+              cursor: pointer;
+              font-size: 14px;
+            " onmouseover="
+              this.style.background = 'var(--color-background-secondary)'
+            " onmouseout="this.style.background = 'transparent'">
+          <input type="checkbox" />
+          <span>Generate 3-5 video scripts with AI (30 min)</span>
+        </label>
+        <label style="
+              display: flex;
+              align-items: center;
+              gap: 8px;
+              padding: 8px;
+              border-radius: var(--border-radius-md);
+              cursor: pointer;
+              font-size: 14px;
+            " onmouseover="
+              this.style.background = 'var(--color-background-secondary)'
+            " onmouseout="this.style.background = 'transparent'">
+          <input type="checkbox" />
+          <span>Create voiceovers for all scripts (20 min)</span>
+        </label>
+        <label style="
+              display: flex;
+              align-items: center;
+              gap: 8px;
+              padding: 8px;
+              border-radius: var(--border-radius-md);
+              cursor: pointer;
+              font-size: 14px;
+            " onmouseover="
+              this.style.background = 'var(--color-background-secondary)'
+            " onmouseout="this.style.background = 'transparent'">
+          <input type="checkbox" />
+          <span>Generate or source visuals (45 min)</span>
+        </label>
+        <label style="
+              display: flex;
+              align-items: center;
+              gap: 8px;
+              padding: 8px;
+              border-radius: var(--border-radius-md);
+              cursor: pointer;
+              font-size: 14px;
+            " onmouseover="
+              this.style.background = 'var(--color-background-secondary)'
+            " onmouseout="this.style.background = 'transparent'">
+          <input type="checkbox" />
+          <span>Edit and assemble 3 videos (2 hours)</span>
+        </label>
+        <label style="
+              display: flex;
+              align-items: center;
+              gap: 8px;
+              padding: 8px;
+              border-radius: var(--border-radius-md);
+              cursor: pointer;
+              font-size: 14px;
+            " onmouseover="
+              this.style.background = 'var(--color-background-secondary)'
+            " onmouseout="this.style.background = 'transparent'">
+          <input type="checkbox" />
+          <span>Design thumbnails with AI (30 min)</span>
+        </label>
+        <label style="
+              display: flex;
+              align-items: center;
+              gap: 8px;
+              padding: 8px;
+              border-radius: var(--border-radius-md);
+              cursor: pointer;
+              font-size: 14px;
+            " onmouseover="
+              this.style.background = 'var(--color-background-secondary)'
+            " onmouseout="this.style.background = 'transparent'">
+          <input type="checkbox" />
+          <span>Write titles and descriptions with keywords (20 min)</span>
+        </label>
+        <label style="
+              display: flex;
+              align-items: center;
+              gap: 8px;
+              padding: 8px;
+              border-radius: var(--border-radius-md);
+              cursor: pointer;
+              font-size: 14px;
+            " onmouseover="
+              this.style.background = 'var(--color-background-secondary)'
+            " onmouseout="this.style.background = 'transparent'">
+          <input type="checkbox" />
+          <span>Schedule uploads for optimal times (10 min)</span>
+        </label>
+        <label style="
+              display: flex;
+              align-items: center;
+              gap: 8px;
+              padding: 8px;
+              border-radius: var(--border-radius-md);
+              cursor: pointer;
+              font-size: 14px;
+            " onmouseover="
+              this.style.background = 'var(--color-background-secondary)'
+            " onmouseout="this.style.background = 'transparent'">
+          <input type="checkbox" />
+          <span>Engage with comments on recent videos (15 min)</span>
+        </label>
+        <label style="
+              display: flex;
+              align-items: center;
+              gap: 8px;
+              padding: 8px;
+              border-radius: var(--border-radius-md);
+              cursor: pointer;
+              font-size: 14px;
+            " onmouseover="
+              this.style.background = 'var(--color-background-secondary)'
+            " onmouseout="this.style.background = 'transparent'">
+          <input type="checkbox" />
+          <span>Analyze performance and adjust strategy (20 min)</span>
+        </label>
+      </div>
+    </div>
+  </div>
+
+  <script src="/Ideas/js/Index.js"></script>
+</body>
+
+</html>
