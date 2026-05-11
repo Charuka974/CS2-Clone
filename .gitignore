@@ -1,0 +1,9 @@
+# Ignore specific 3D model raw folders
+Game/assets/3dmodals/5cyle10vuwzk-S2/
+Game/assets/3dmodals/skjlt4sqlw-t90aElementsofwar/
+Game/assets/3dmodals/WoodenWatchTower/
+Game/assets/3dmodals/SniperRifle/
+
+# Also ignore Blender temporary files
+*.blend1
+*.blend2
