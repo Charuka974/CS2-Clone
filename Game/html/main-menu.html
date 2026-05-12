@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>CS2 • Tactical Lobby 2026</title>
+
+<!-- Tailwind -->
+<script src="https://cdn.tailwindcss.com"></script>
+
+<!-- Icons -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"/>
+
+<!-- Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<!-- CSS -->
+<link rel="stylesheet" href="/Game/css/main-menu.css">
+
+</head>
+
+<body>
+
+<!-- BACKGROUND -->
+<div id="bg"></div>
+<div class="overlay"></div>
+<div id="particles"></div>
+
+<div class="app">
+
+    <!-- TOPBAR -->
+    <div class="topbar glass">
+
+        <div class="logo">
+            <div class="logo-icon title-font">CS</div>
+
+            <div>
+                <div class="title-font text-3xl font-black neon">
+                    CS2
+                </div>
+                <div class="text-xs text-white/60 tracking-[3px]">
+                    TACTICAL WARFARE
+                </div>
+            </div>
+        </div>
+
+        <div class="right-top">
+
+            <div class="status">
+                <span class="text-emerald-400">●</span>
+                148,291 PLAYING
+            </div>
+
+            <div class="status">
+                <i class="fa-solid fa-coins text-yellow-400"></i>
+                2,840
+            </div>
+
+            <div class="w-11 h-11 rounded-2xl overflow-hidden border border-emerald-400">
+                <img src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?q=80&w=200" class="w-full h-full object-cover">
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- MOBILE MENU -->
+    <div class="mobile-top">
+        <div class="map-btn active">Quick Play</div>
+        <div class="map-btn">Multiplayer</div>
+        <div class="map-btn">Ranked</div>
+        <div class="map-btn">Battle Royale</div>
+    </div>
+
+    <!-- MAIN -->
+    <div class="main">
+
+        <!-- LEFT -->
+        <aside class="sidebar glass">
+
+            <div class="menu">
+
+
+                <div class="menu-item active">
+                    <i class="fa-solid fa-bolt"></i>
+                    QUICK PLAY
+                </div>
+
+                <a href="/Game/html/cs2-clone.html">
+                    <div class="menu-item">
+                        <i class="fa-solid fa-user"></i>
+                        SINGLE PLAYER
+                    </div>
+                </a>
+                
+
+                <a href="/Game/html/cs2-clone.html">
+                    <div class="menu-item">
+                        <i class="fa-solid fa-users"></i>
+                        MULTIPLAYER
+                    </div>
+                </a>
+
+                <div class="menu-item">
+                    <i class="fa-solid fa-trophy"></i>
+                    RANKED
+                </div>
+
+                <div class="menu-item">
+                    <i class="fa-solid fa-skull"></i>
+                    BATTLE ROYALE
+                </div>
+
+                <div class="h-px bg-white/10 my-4"></div>
+
+                <div class="menu-item">
+                    <i class="fa-solid fa-gun"></i>
+                    ARSENAL
+                </div>
+
+                <div class="menu-item">
+                    <i class="fa-solid fa-box"></i>
+                    INVENTORY
+                </div>
+
+                <div class="menu-item">
+                    <i class="fa-solid fa-user-secret"></i>
+                    OPERATORS
+                </div>
+
+                <div class="menu-item">
+                    <i class="fa-solid fa-users-rectangle"></i>
+                    CLAN
+                </div>
+
+            </div>
+
+        </aside>
+
+        <!-- CENTER -->
+        <main class="center">
+
+            <div class="character">
+
+                <img
+                id="characterImage"
+                src="https://images.unsplash.com/photo-1511884642898-4c92249e20b6?q=80&w=900"
+                alt="soldier">
+
+                <div class="player-card glass">
+                    <div class="text-emerald-400 text-xs tracking-[3px]">
+                        LEVEL 87
+                    </div>
+
+                    <div class="title-font text-2xl mt-1">
+                        GHOST-07
+                    </div>
+
+                    <div class="text-sm text-white/60 mt-1">
+                        GLOBAL ELITE • 4281 ELO
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- MATCH CARD -->
+            <div class="match-card glass">
+
+                <div class="match-inner">
+
+                    <div class="match-grid">
+
+                        <div>
+
+                            <div class="flex items-center gap-3 mb-4">
+
+                                <div class="w-3 h-3 rounded-full bg-emerald-400 animate-pulse"></div>
+
+                                <div class="text-sm tracking-[3px] text-white/60">
+                                    ACTIVE ENVIRONMENT
+                                </div>
+
+                            </div>
+
+                            <!-- MAP SWITCHER -->
+                            <div class="maps">
+
+                                <div class="map-btn active" onclick="changeMap(0,this)">
+                                    ☀ DAY
+                                </div>
+
+                                <div class="map-btn" onclick="changeMap(1,this)">
+                                    🌙 NIGHT
+                                </div>
+
+                                <div class="map-btn" onclick="changeMap(2,this)">
+                                    🌴 JUNGLE
+                                </div>
+
+                                <div class="map-btn" onclick="changeMap(3,this)">
+                                    ❄ WINTER
+                                </div>
+
+                                <div class="map-btn" onclick="changeMap(4,this)">
+                                    🌧 RAIN
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                        <button class="find-btn" id="findBtn">
+                            <i class="fa-solid fa-rocket mr-2"></i>
+                            FIND MATCH
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </main>
+
+        <!-- RIGHT -->
+        <aside class="right glass">
+
+            <div class="card glass">
+
+                <div class="flex justify-between items-center mb-4">
+                    <div class="font-semibold">
+                        DAILY MISSIONS
+                    </div>
+
+                    <div class="text-xs text-emerald-400">
+                        +420 XP
+                    </div>
+                </div>
+
+                <div class="mb-5">
+                    <div class="flex justify-between text-sm mb-2">
+                        <span>Eliminate 15 enemies</span>
+                        <span>12/15</span>
+                    </div>
+
+                    <div class="h-2 bg-white/10 rounded-full overflow-hidden">
+                        <div class="h-full w-[80%] bg-emerald-400 rounded-full"></div>
+                    </div>
+                </div>
+
+                <div>
+                    <div class="flex justify-between text-sm mb-2">
+                        <span>Win 3 matches</span>
+                        <span>1/3</span>
+                    </div>
+
+                    <div class="h-2 bg-white/10 rounded-full overflow-hidden">
+                        <div class="h-full w-[35%] bg-cyan-400 rounded-full"></div>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="card glass">
+
+                <div class="text-red-400 text-xs tracking-[3px]">
+                    LIVE EVENT
+                </div>
+
+                <div class="text-2xl title-font mt-2">
+                    SHADOWFALL
+                </div>
+
+                <div class="text-white/60 mt-3">
+                    New operators, weapon skins, ranked rewards and dark-zone missions.
+                </div>
+
+            </div>
+
+            <div class="card glass">
+
+                <div class="font-semibold mb-4">
+                    SQUAD ONLINE
+                </div>
+
+                <div class="space-y-4">
+
+                    <div class="flex items-center justify-between">
+
+                        <div class="flex items-center gap-3">
+
+                            <img src="https://randomuser.me/api/portraits/men/41.jpg"
+                            class="w-11 h-11 rounded-2xl object-cover">
+
+                            <div>
+                                <div class="text-sm">
+                                    ReaperX9
+                                </div>
+
+                                <div class="text-xs text-emerald-400">
+                                    In Lobby
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <i class="fa-solid fa-headset text-emerald-400"></i>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </aside>
+
+    </div>
+
+</div>
+
+<!-- JAVASCRIPT -->
+<script src="/Game/js/main-menu.js"></script>
+
+</body>
+</html>

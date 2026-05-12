@@ -1164,11 +1164,11 @@ function updateHUD() {
     if (currentWeapon === 'rifle') {
         nameEl.textContent = "M4A1-S";
         nameEl.style.color = "#4b69ff";
-        if (imageEl) imageEl.src = "assets/images/M4A1S.png";
+        if (imageEl) imageEl.src = "/Game/assets/images/M4A1S.png";
     } else if (currentWeapon === 'pistol') {
         nameEl.textContent = "GLOCK-18";
         nameEl.style.color = "#ffffff";
-        if (imageEl) imageEl.src = "assets/images/glock18.png";
+        if (imageEl) imageEl.src = "/Game/assets/images/glock18.png";
     } else {
         console.log("Unknown weapon type: " + currentWeapon);
     }

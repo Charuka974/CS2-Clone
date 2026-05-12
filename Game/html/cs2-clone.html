@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CS2 Clone - WebGL Edition</title>
+
+    <script type="importmap">
+      {
+        "imports": {
+          "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
+          "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/"
+        }
+      }
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/cannon@0.6.2/build/cannon.min.js"></script>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+
+    <link rel="stylesheet" href="/Game/css/cs2-clone.css" />
+</head>
+
+<body>
+    <!-- Canvas for Three.js -->
+    <canvas id="gameCanvas"></canvas>
+
+    <!-- Main Menu -->
+    <div id="mainMenu">
+        <h1>CS2 CLONE</h1>
+        <button class="menu-button" onclick="startGame('singleplayer')">
+            SINGLEPLAYER (BOTS)
+        </button>
+        <button class="menu-button" onclick="startGame('multiplayer')">
+            MULTIPLAYER
+        </button>
+    </div>
+
+    <!-- HUD -->
+    <div id="hud">
+        <div class="hud-panel" id="healthBar">
+            <i class="fas fa-square-plus hp-icon" id="hpIcon"></i>
+            <div style="display: flex; flex-direction: column; margin-left: 10px">
+                <span style="
+              font-size: 11px;
+              color: #00ff88;
+              letter-spacing: 2px;
+              font-weight: bold;
+            ">OPERATOR STATUS</span>
+                <div style="display: flex; align-items: baseline">
+                    <span id="healthText">100</span>
+                    <span style="
+                font-size: 14px;
+                color: #00ff88;
+                margin-left: 5px;
+                opacity: 0.7;
+              ">%</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="hud-panel" id="ammoDisplay">
+            <div class="ammo-info" style="margin-right: 20px">
+                <span id="weaponName" style="
+              font-size: 14px;
+              color: #ffffff;
+              font-weight: bold;
+              display: block;
+              margin-bottom: 5px;
+            ">M4A1-S</span>
+                <span style="font-size: 12px; color: #ff6b35; letter-spacing: 1px">MAGAZINE</span>
+                <div>
+                    <span id="currentAmmo">30</span>
+                    <span id="reserveAmmo">/ 90</span>
+                </div>
+            </div>
+            <div class="weapon-container">
+                <img id="weaponImage" src="/Game/assets/images/M4A1S.png" class="weapon-img" alt="weapon" />
+            </div>
+        </div>
+    </div>
+
+    <!-- Crosshair -->
+    <div id="crosshair"></div>
+
+    <!-- Kill Feed -->
+    <div id="killFeed"></div>
+
+    <!-- Reload Indicator -->
+    <div id="reloadIndicator">RELOADING...</div>
+
+    <!-- Loading Screen -->
+    <div id="loadingScreen">
+        <h2>LOADING...</h2>
+    </div>
+
+    <!-- Death Screen -->
+    <div id="deathScreen">
+        <h2>YOU DIED</h2>
+    </div>
+
+    <script type="module" src="/Game/js/cs2clone.js"></script>
+</body>
+
+</html>
