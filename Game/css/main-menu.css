@@ -1,0 +1,394 @@
+:root{
+    --accent:#00ff9d;
+    --accent2:#00c8ff;
+    --bg:#070b12;
+}
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+html,body{
+    width:100%;
+    height:100%;
+    overflow:hidden;
+    background:black;
+    font-family:'Inter',sans-serif;
+    color:white;
+}
+
+/* ===== BACKGROUND ===== */
+
+#bg{
+    position:fixed;
+    inset:0;
+    background-size:cover;
+    background-position:center;
+    transition:all 1s ease;
+    transform:scale(1.05);
+    z-index:0;
+}
+
+.overlay{
+    position:fixed;
+    inset:0;
+    background:
+    linear-gradient(to top, rgba(0,0,0,.9), rgba(0,0,0,.25)),
+    radial-gradient(circle at top right, rgba(0,255,157,.15), transparent 30%);
+    z-index:1;
+}
+
+#particles{
+    position:fixed;
+    inset:0;
+    overflow:hidden;
+    z-index:2;
+    pointer-events:none;
+}
+
+.particle{
+    position:absolute;
+    border-radius:50%;
+    background:white;
+    opacity:.5;
+    animation:float linear infinite;
+}
+
+@keyframes float{
+    0%{
+        transform:translateY(0px);
+        opacity:0;
+    }
+    10%{
+        opacity:.8;
+    }
+    100%{
+        transform:translateY(-120vh);
+        opacity:0;
+    }
+}
+
+/* ===== GLASS ===== */
+
+.glass{
+    background:rgba(10,15,25,.6);
+    backdrop-filter:blur(18px);
+    border:1px solid rgba(255,255,255,.07);
+}
+
+.title-font{
+    font-family:'Orbitron',sans-serif;
+}
+
+.neon{
+    text-shadow:
+    0 0 8px var(--accent),
+    0 0 20px var(--accent);
+}
+
+/* ===== APP LAYOUT ===== */
+
+.app{
+    position:relative;
+    z-index:10;
+    display:flex;
+    flex-direction:column;
+    height:100vh;
+}
+
+/* ===== TOPBAR ===== */
+
+.topbar{
+    height:82px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:0 24px;
+    border-bottom:1px solid rgba(255,255,255,.08);
+}
+
+.logo{
+    display:flex;
+    align-items:center;
+    gap:14px;
+}
+
+.logo-icon{
+    width:42px;
+    height:42px;
+    border-radius:16px;
+    background:linear-gradient(135deg,var(--accent),var(--accent2));
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-weight:900;
+    color:black;
+}
+
+.right-top{
+    display:flex;
+    align-items:center;
+    gap:18px;
+}
+
+.status{
+    background:rgba(255,255,255,.06);
+    padding:10px 18px;
+    border-radius:999px;
+    font-size:13px;
+}
+
+/* ===== MAIN ===== */
+
+.main{
+    flex:1;
+    display:grid;
+    grid-template-columns:280px 1fr 330px;
+    overflow:hidden;
+}
+
+/* ===== SIDEBAR ===== */
+
+.sidebar{
+    padding:20px;
+    border-right:1px solid rgba(255,255,255,.08);
+    overflow:auto;
+}
+
+.menu{
+    display:flex;
+    flex-direction:column;
+    gap:12px;
+}
+
+.menu-item{
+    padding:18px;
+    border-radius:22px;
+    display:flex;
+    align-items:center;
+    gap:16px;
+    cursor:pointer;
+    transition:.3s;
+}
+
+.menu-item:hover{
+    background:rgba(255,255,255,.07);
+    transform:translateX(6px);
+}
+
+.menu-item.active{
+    background:rgba(0,255,157,.12);
+    border:1px solid rgba(0,255,157,.5);
+    color:var(--accent);
+}
+
+/* ===== CENTER ===== */
+
+.center{
+    position:relative;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    overflow:hidden;
+    padding:20px;
+}
+
+.character{
+    position:relative;
+    animation:floatCharacter 5s ease-in-out infinite;
+}
+
+@keyframes floatCharacter{
+    0%,100%{
+        transform:translateY(0px);
+    }
+    50%{
+        transform:translateY(-10px);
+    }
+}
+
+.character img{
+    max-height:80vh;
+    width:auto;
+    opacity:0.7;
+    border-radius: 20px;
+    object-fit:contain;
+    filter:
+    drop-shadow(0 0 30px rgba(0,0,0,.7))
+    drop-shadow(0 0 40px rgba(0,255,157,.25));
+}
+
+.player-card{
+    position:absolute;
+    top:20px;
+    right:20px;
+
+    padding:18px 24px;
+    border-radius:28px;
+
+    z-index:20;
+}
+
+/* ===== FIND MATCH CARD ===== */
+
+.match-card{
+    position:absolute;
+    bottom:25px;
+    left:50%;
+    transform:translateX(-50%);
+    width:min(95%,720px);
+    border-radius:30px;
+    overflow:hidden;
+    opacity:0.8;
+}
+
+.match-inner{
+    padding:20px;
+}
+
+.match-grid{
+    display:grid;
+    grid-template-columns:1fr auto;
+    gap:20px;
+    align-items:center;
+}
+
+.find-btn{
+    border:none;
+    outline:none;
+    background:linear-gradient(135deg,var(--accent),var(--accent2));
+    color:black;
+    font-weight:900;
+    font-size:18px;
+    padding:20px 40px;
+    border-radius:22px;
+    cursor:pointer;
+    transition:.25s;
+}
+
+.find-btn:hover{
+    transform:scale(1.03);
+}
+
+.find-btn:active{
+    transform:scale(.97);
+}
+
+/* ===== MAP SWITCHER ===== */
+
+.maps{
+    display:flex;
+    gap:12px;
+    flex-wrap:wrap;
+}
+
+.map-btn{
+    padding:12px 18px;
+    border-radius:18px;
+    background:rgba(255,255,255,.06);
+    cursor:pointer;
+    transition:.25s;
+    border:1px solid transparent;
+    font-size:13px;
+}
+
+.map-btn:hover{
+    border-color:var(--accent);
+}
+
+.map-btn.active{
+    background:rgba(0,255,157,.15);
+    border-color:var(--accent);
+    color:var(--accent);
+}
+
+/* ===== RIGHT PANEL ===== */
+
+.right{
+    border-left:1px solid rgba(255,255,255,.08);
+    padding:20px;
+    overflow:auto;
+}
+
+.card{
+    border-radius:26px;
+    padding:20px;
+    margin-bottom:18px;
+}
+
+/* ===== MOBILE ===== */
+
+.mobile-top{
+    display:none;
+}
+
+@media(max-width:1200px){
+
+    .main{
+        grid-template-columns:240px 1fr;
+    }
+
+    .right{
+        display:none;
+    }
+
+}
+
+@media(max-width:900px){
+
+    body{
+        overflow:auto;
+    }
+
+    .app{
+        height:auto;
+        min-height:100vh;
+    }
+
+    .topbar{
+        padding:0 16px;
+    }
+
+    .main{
+        display:flex;
+        flex-direction:column;
+    }
+
+    .sidebar{
+        display:none;
+    }
+
+    .center{
+        min-height:calc(100vh - 82px);
+        padding-bottom:180px;
+    }
+
+    .character img{
+        max-height:55vh;
+    }
+
+     .player-card{
+        top:15px;
+        right:15px;
+
+        padding:14px 18px;
+    }
+
+    .match-grid{
+        grid-template-columns:1fr;
+    }
+
+    .find-btn{
+        width:100%;
+    }
+
+    .mobile-top{
+        display:flex;
+        gap:10px;
+        overflow:auto;
+        padding:14px;
+    }
+
+}
