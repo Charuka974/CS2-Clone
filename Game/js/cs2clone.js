@@ -1,10 +1,20 @@
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
-
-
+import {
+    createBackground,
+    createMap
+} from './gameBackground.js';
+import {
+    createMuzzleFlash,
+    createBulletTracer,
+    ejectShell,
+    applyWeaponKickback,
+    setWeaponContext,
+    updateCurrentWeapon
+} from './weaponBehaviour.js';
 
 // Expose startGame to HTML buttons
-window.startGame = async function (mode) {
+async function startGame(mode) {
     gameMode = mode;
     document.getElementById('mainMenu').style.display = 'none';
     document.getElementById('loadingScreen').style.display = 'flex';
@@ -12,7 +22,8 @@ window.startGame = async function (mode) {
     try {
         initThreeJS();
         initPhysics();
-        createMap();
+        createBackground(scene, world);
+        createMap(scene, world);
 
         // Load weapon models
         rifleModel = await loadWeaponModel('M4a1', 'M4a1', 0.2, RIFLE_HIP_POS, new THREE.Euler(0, 0, 0));
@@ -32,6 +43,15 @@ window.startGame = async function (mode) {
             changeWeaponSkin(pistolModel, '/Game/assets/skins/skin1.jpg'); // Change to your skin
         }
 
+        // ADD THIS BLOCK
+        setWeaponContext({
+            scene: scene,
+            camera: camera,
+            rifleModel: rifleModel,
+            pistolModel: pistolModel,
+            currentWeapon: currentWeapon
+        });
+
         initControls();
 
         if (mode === 'singleplayer') {
@@ -46,6 +66,7 @@ window.startGame = async function (mode) {
         document.getElementById('loadingScreen').style.display = 'none';
     }
 };
+window.startGame = startGame;
 
 // ============================================================================
 // GLOBAL GAME STATE
@@ -61,13 +82,19 @@ let moveForward = false, moveBackward = false, moveLeft = false, moveRight = fal
 let isSprinting = false, isCrouching = false;
 let canJump = true;
 let playerHealth = 100;
-let rifleAmmo = 30, rifleReserve = 90;
-let pistolAmmo = 17, pistolReserve = 51;
+let rifleAmmo = 30, rifleReserve = 100000;
+let pistolAmmo = 17, pistolReserve = 100000;
 let isReloading = false;
 let bots = [];
 let multiplayerPlayers = new Map();
 let localPlayerId = null;
 let isAiming = false;
+
+let lastShotTime = 0;
+const RIFLE_FIRE_RATE = 80;   // milliseconds between shots (lower = faster)
+const PISTOL_FIRE_RATE = 250;
+
+let isMouseDown = false;
 
 const PLAYER_HEIGHT = 1.8;
 const CROUCH_HEIGHT = 1.2;
@@ -107,12 +134,9 @@ const rotationSpeed = 0.002;
 function initThreeJS() {
     // Scene
     scene = new THREE.Scene();
-    scene.background = new THREE.Color(0x87CEEB); // Sky blue
-    scene.fog = new THREE.Fog(0x87CEEB, 0, 300);
-
     // Camera
     camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-    camera.position.set(0, PLAYER_HEIGHT, 0);
+    camera.position.set(0, 12, 0);
 
     // ADD THIS LINE: Without this, weapons attached to the camera will be invisible!
     scene.add(camera);
@@ -344,126 +368,6 @@ function createPistolModel() {
 
 
 // ============================================================================
-// ENHANCED PARKOUR MAP (Venge.io + CS2 Style)
-// ============================================================================
-
-function createMap() {
-    // Better atmosphere
-    scene.fog = new THREE.Fog(0x88aaff, 80, 450);
-    scene.background = new THREE.Color(0x88aaff);
-
-    const groundMat = new THREE.MeshStandardMaterial({ color: 0x3a5f3a, roughness: 0.85 });
-    const concreteMat = new THREE.MeshStandardMaterial({ color: 0xaaaaaa, roughness: 0.75 });
-    const metalMat = new THREE.MeshStandardMaterial({ color: 0x555577, metalness: 0.85, roughness: 0.25 });
-
-    // Main Ground
-    const ground = new THREE.Mesh(new THREE.BoxGeometry(320, 2, 320), groundMat);
-    ground.position.y = -1;
-    ground.receiveShadow = true;
-    scene.add(ground);
-
-    const groundBody = new CANNON.Body({ mass: 0 });
-    groundBody.addShape(new CANNON.Box(new CANNON.Vec3(160, 1, 160)));
-    groundBody.position.y = -1;
-    world.addBody(groundBody);
-
-    // Platform Helper
-    function createPlatform(x, y, z, w, h, d, material, color = 0x888888) {
-        const mesh = new THREE.Mesh(
-            new THREE.BoxGeometry(w, h, d),
-            material || new THREE.MeshStandardMaterial({ color })
-        );
-        mesh.position.set(x, y, z);
-        mesh.castShadow = true;
-        mesh.receiveShadow = true;
-        scene.add(mesh);
-
-        const body = new CANNON.Body({ mass: 0 });
-        body.addShape(new CANNON.Box(new CANNON.Vec3(w/2, h/2, d/2)));
-        body.position.set(x, y, z);
-        world.addBody(body);
-
-        return mesh;
-    }
-
-    // === STRUCTURES & PARKOUR ===
-    createPlatform(-85, 10, -70, 55, 20, 45, null, 0x666666);
-    createPlatform(80, 12, 75, 50, 24, 40, null, 0x555555);
-    createPlatform(5, 18, -5, 18, 36, 18, null, 0x777777);
-
-    // Ramp
-    const ramp = new THREE.Mesh(new THREE.BoxGeometry(18, 1.5, 35), concreteMat);
-    ramp.position.set(-35, 6, 25);
-    ramp.rotation.x = Math.PI / 5.5;
-    scene.add(ramp);
-
-    const rampBody = new CANNON.Body({ mass: 0 });
-    rampBody.addShape(new CANNON.Box(new CANNON.Vec3(9, 0.75, 17.5)));
-    rampBody.position.set(-35, 6, 25);
-    rampBody.quaternion.setFromEuler(Math.PI / 5.5, 0, 0);
-    world.addBody(rampBody);
-
-    // Parkour Elements
-    createPlatform(-50, 16, 45, 6, 1, 55, metalMat);
-    createPlatform(20, 24, 35, 10, 1.2, 10, metalMat);
-    createPlatform(45, 19, 70, 8, 1, 28, metalMat);
-    createPlatform(-25, 28, 65, 7, 1, 7, metalMat);
-
-    // === JUMP PADS ===
-    const jumpPads = [];
-
-    function createJumpPad(x, z, y = 0.8) {
-        const pad = new THREE.Mesh(
-            new THREE.CylinderGeometry(4.2, 4.8, 0.5, 32),
-            new THREE.MeshStandardMaterial({
-                color: 0x00eeff,
-                emissive: 0x00ffff,
-                emissiveIntensity: 1.2,
-                metalness: 0.9,
-                roughness: 0.1
-            })
-        );
-        pad.position.set(x, y, z);
-        pad.rotation.x = Math.PI / 2;
-        scene.add(pad);
-
-        const body = new CANNON.Body({ mass: 0 });
-        body.addShape(new CANNON.Cylinder(4.2, 4.8, 0.5, 32));
-        body.position.set(x, y, z);
-        world.addBody(body);
-
-        const light = new THREE.PointLight(0x00ffff, 3, 40);
-        light.position.set(x, y + 3, z);
-        scene.add(light);
-
-        jumpPads.push({ mesh: pad, body, light });
-        return pad;
-    }
-
-    createJumpPad(-55, -55);
-    createJumpPad(55, -70);
-    createJumpPad(-15, 85);
-    createJumpPad(70, 45);
-    createJumpPad(0, -95);
-    createJumpPad(-85, 30);
-
-    // More structures...
-    createPlatform(-20, 8, 45, 8, 16, 8, null, 0x666666);
-    createPlatform(30, 7, -35, 12, 14, 12, null, 0x666666);
-    createPlatform(0, 6, 80, 20, 12, 8, null, 0x777777);
-
-    // Outer Walls
-    createPlatform(0, 15, -160, 320, 30, 6, null, 0x444466);
-    createPlatform(0, 15, 160, 320, 30, 6, null, 0x444466);
-    createPlatform(-160, 15, 0, 6, 30, 320, null, 0x444466);
-    createPlatform(160, 15, 0, 6, 30, 320, null, 0x444466);
-
-    window.jumpPads = jumpPads;
-
-    console.log("Enhanced Parkour Map with Jump Pads Loaded!");
-}
-
-// ============================================================================
 // BOT AI (Singleplayer)
 // ============================================================================
 
@@ -527,36 +431,68 @@ class Bot {
     }
 
     shoot() {
+
         const origin = new THREE.Vector3(
             this.body.position.x,
             this.body.position.y + 1,
             this.body.position.z
         );
+
         const playerPos = new THREE.Vector3(
             playerBody.position.x,
             playerBody.position.y + 1,
             playerBody.position.z
         );
-        const direction = playerPos.clone().sub(origin).normalize();
 
-        const raycaster = new THREE.Raycaster(origin, direction, 0, 100);
-        
-        // Use same filtering logic
-        const allObjects = scene.children.concat(camera.children);
-        const intersects = raycaster.intersectObjects(allObjects, true)
+        const direction = playerPos
+            .clone()
+            .sub(origin)
+            .normalize();
+
+        const raycaster = new THREE.Raycaster(
+            origin,
+            direction,
+            0,
+            100
+        );
+
+        const allObjects =
+            scene.children.concat(camera.children);
+
+        const intersects =
+            raycaster.intersectObjects(allObjects, true)
             .filter(intersect => {
+
                 const obj = intersect.object;
-                if (rifleModel && (obj === rifleModel || rifleModel.children.includes(obj))) return false;
-                if (pistolModel && (obj === pistolModel || pistolModel.children.includes(obj))) return false;
+
+                if (
+                    rifleModel &&
+                    (obj === rifleModel ||
+                    rifleModel.children.includes(obj))
+                ) return false;
+
+                if (
+                    pistolModel &&
+                    (obj === pistolModel ||
+                    pistolModel.children.includes(obj))
+                ) return false;
+
                 return true;
             });
 
         if (intersects.length > 0) {
+
             const hit = intersects[0];
-            // Simple distance check for damage
+
+            createMuzzleFlash(origin, direction);
+
+            createBulletTracer(
+                origin,
+                hit.point
+            );
+
             if (origin.distanceTo(playerPos) < 80) {
-                damagePlayer(0);  // Player takes no damage
-                createMuzzleFlash(origin);
+                damagePlayer(0);
             }
         }
     }
@@ -774,186 +710,555 @@ function initControls() {
 }
 
 function updateCameraHeight() {
-    const targetHeight = isCrouching ? CROUCH_HEIGHT : PLAYER_HEIGHT;
-    camera.position.y = playerBody.position.y + targetHeight - PLAYER_HEIGHT / 2;
+    const eyeHeight = isCrouching ? 1.0 : 1.6;
+
+    camera.position.set(
+        playerBody.position.x,
+        playerBody.position.y + eyeHeight,
+        playerBody.position.z
+    );
 }
 
 // ============================================================================
-// COMBAT SYSTEM (Improved)
+// COMBAT SYSTEM (FULLY FIXED)
 // ============================================================================
 
-let lastShotTime = 0;
-const RIFLE_FIRE_RATE = 80;   // milliseconds between shots (lower = faster)
-const PISTOL_FIRE_RATE = 250;
-
-let isMouseDown = false;
+// ============================================================================
+// COMBAT SYSTEM (FULLY FIXED)
+// ============================================================================
 
 function shoot() {
+
+    // ============================================
+    // BLOCK CONDITIONS
+    // ============================================
+
     if (isReloading) return;
 
     const now = Date.now();
-    const fireRate = currentWeapon === 'rifle' ? RIFLE_FIRE_RATE : PISTOL_FIRE_RATE;
-    const currentAmmo = currentWeapon === 'rifle' ? rifleAmmo : pistolAmmo;
+
+    const fireRate =
+        currentWeapon === 'rifle'
+            ? RIFLE_FIRE_RATE
+            : PISTOL_FIRE_RATE;
+
+    if (now - lastShotTime < fireRate) {
+        return;
+    }
+
+    lastShotTime = now;
+
+    // ============================================
+    // CURRENT WEAPON
+    // ============================================
+
+    const weapon =
+        currentWeapon === 'rifle'
+            ? rifleModel
+            : pistolModel;
+
+    // ============================================
+    // AMMO
+    // ============================================
+
+    const currentAmmo =
+        currentWeapon === 'rifle'
+            ? rifleAmmo
+            : pistolAmmo;
 
     if (currentAmmo <= 0) {
         reload();
         return;
     }
 
-    if (now - lastShotTime < fireRate) return;
-
-    lastShotTime = now;
-
-    // Consume ammo
-    if (currentWeapon === 'rifle') rifleAmmo--;
-    else pistolAmmo--;
+    // REMOVE AMMO
+    if (currentWeapon === 'rifle') {
+        rifleAmmo--;
+    } else {
+        pistolAmmo--;
+    }
 
     updateHUD();
 
-    // Muzzle Flash
+    // ============================================
+    // CAMERA DIRECTION
+    // ============================================
+
+    const shootDirection = new THREE.Vector3();
+
+    camera.getWorldDirection(shootDirection);
+
+    shootDirection.normalize();
+
+    // ============================================
+    // MUZZLE POSITION (FIXED)
+    // ============================================
+
+    // ============================================
+    // MUZZLE POSITION (ADS FIXED)
+    // ============================================
+
     const muzzlePos = new THREE.Vector3();
+
     camera.getWorldPosition(muzzlePos);
-    muzzlePos.add(camera.getWorldDirection(new THREE.Vector3()).multiplyScalar(0.6));
-    createMuzzleFlash(muzzlePos);
 
-    // ==================== FIXED RAYCAST ====================
-    const raycaster = new THREE.Raycaster();
-    raycaster.setFromCamera(new THREE.Vector2(0, 0), camera);
+    // Camera vectors
+    const right = new THREE.Vector3(1, 0, 0)
+        .applyQuaternion(camera.quaternion);
 
-    // Get all objects for raycasting
-    const allObjects = scene.children.concat(camera.children); // Important: include camera children
+    const up = new THREE.Vector3(0, 1, 0)
+        .applyQuaternion(camera.quaternion);
 
-    let intersects = raycaster.intersectObjects(allObjects, true);
+    const forward = shootDirection.clone();
 
-    // Filter out player's own weapons
-    intersects = intersects.filter(intersect => {
-        const obj = intersect.object;
+    // ============================================
+    // RIFLE
+    // ============================================
 
-        // Skip if it's part of rifle or pistol
-        if (rifleModel) {
-            if (obj === rifleModel || rifleModel.children.includes(obj)) return false;
+    if (currentWeapon === 'rifle') {
+
+        if (isAiming) {
+
+            // CENTERED ADS
+            muzzlePos
+                .add(up.clone().multiplyScalar(-0.08))
+                .add(forward.clone().multiplyScalar(0.95));
+
+        } else {
+
+            // HIP FIRE
+            muzzlePos
+                .add(right.clone().multiplyScalar(0.28))
+                .add(up.clone().multiplyScalar(-0.04))
+                .add(forward.clone().multiplyScalar(1.35));
         }
-        if (pistolModel) {
-            if (obj === pistolModel || pistolModel.children.includes(obj)) return false;
+    }
+
+    // ============================================
+    // PISTOL
+    // ============================================
+
+    else {
+
+        if (isAiming) {
+
+            // SLIGHTLY HIGHER ADS
+            muzzlePos
+                .add(up.clone().multiplyScalar(-0.04))
+                .add(forward.clone().multiplyScalar(0.65));
+
+        } else {
+
+            // HIP FIRE
+            muzzlePos
+                .add(right.clone().multiplyScalar(0.20))
+                .add(up.clone().multiplyScalar(-0.05))
+                .add(forward.clone().multiplyScalar(0.70));
         }
-        return true;
-    });
+    }
+
+    // ============================================
+    // FX
+    // ============================================
+
+    createMuzzleFlash(
+        muzzlePos,
+        shootDirection,
+        currentWeapon
+    );
+
+    ejectShell(
+        weapon,
+        currentWeapon
+    );
+
+    applyWeaponKickback(
+        weapon,
+        currentWeapon,
+        updateWeaponPosition
+    );
+
+    // ============================================
+    // RAYCAST
+    // ============================================
+
+    const raycaster = new THREE.Raycaster(
+        camera.position,
+        shootDirection,
+        0,
+        250
+    );
+
+    const intersects = raycaster
+        .intersectObjects(scene.children, true)
+        .filter(intersect => {
+
+            let current = intersect.object;
+
+            while (current) {
+
+                // IGNORE PLAYER WEAPONS
+                if (
+                    current === rifleModel ||
+                    current === pistolModel
+                ) {
+                    return false;
+                }
+
+                current = current.parent;
+            }
+
+            return true;
+        });
+
+    // ============================================
+    // HIT
+    // ============================================
 
     if (intersects.length > 0) {
+
         const hit = intersects[0];
+
+        // IMPACT FX
         createImpactEffect(hit.point);
 
-        // Damage Bots
+        // BULLET TRACER
+        createBulletTracer(
+            muzzlePos,
+            hit.point,
+            currentWeapon
+        );
+
+        // ========================================
+        // SINGLEPLAYER DAMAGE
+        // ========================================
+
         if (gameMode === 'singleplayer') {
-            for (let bot of bots) {
-                if (bot.health <= 0) continue;
-                if (hit.object === bot.mesh || bot.mesh.children.includes(hit.object)) {
-                    bot.takeDamage(currentWeapon === 'rifle' ? 22 : 28);
+
+            for (const bot of bots) {
+
+                if (!bot || bot.health <= 0) continue;
+
+                let current = hit.object;
+                let hitBot = false;
+
+                while (current) {
+
+                    if (current === bot.mesh) {
+                        hitBot = true;
+                        break;
+                    }
+
+                    current = current.parent;
+                }
+
+                if (hitBot) {
+
+                    const damage =
+                        currentWeapon === 'rifle'
+                            ? 22
+                            : 28;
+
+                    bot.takeDamage(damage);
+
+                    console.log(
+                        `Hit Bot ${bot.id} for ${damage}`
+                    );
+
                     break;
                 }
             }
         }
 
-        // Damage Multiplayer Players
-        if (gameMode === 'multiplayer') {
-            multiplayerPlayers.forEach((data, playerId) => {
-                if (playerId === localPlayerId) return;
-                if (data.mesh === hit.object || data.mesh.children.includes(hit.object)) {
-                    const currentHealth = data.player.getState('health') || 100;
-                    const damage = currentWeapon === 'rifle' ? 22 : 28;
-                    const newHealth = Math.max(0, currentHealth - damage);
+        // ========================================
+        // MULTIPLAYER DAMAGE
+        // ========================================
 
-                    data.player.setState('health', newHealth);
+        if (gameMode === 'multiplayer') {
+
+            multiplayerPlayers.forEach((data, playerId) => {
+
+                if (
+                    playerId === localPlayerId ||
+                    !data.mesh
+                ) {
+                    return;
+                }
+
+                let current = hit.object;
+                let hitPlayer = false;
+
+                while (current) {
+
+                    if (current === data.mesh) {
+                        hitPlayer = true;
+                        break;
+                    }
+
+                    current = current.parent;
+                }
+
+                if (hitPlayer) {
+
+                    const currentHealth =
+                        data.player.getState('health') || 100;
+
+                    const damage =
+                        currentWeapon === 'rifle'
+                            ? 22
+                            : 28;
+
+                    const newHealth =
+                        Math.max(0, currentHealth - damage);
+
+                    data.player.setState(
+                        'health',
+                        newHealth
+                    );
 
                     if (newHealth <= 0) {
-                        addKillFeedMessage('You', `Player ${playerId.substring(0,6)}`);
+
+                        addKillFeedMessage(
+                            'You',
+                            `Player ${playerId.substring(0, 6)}`
+                        );
                     }
                 }
             });
         }
+
+    } else {
+
+        // ========================================
+        // MISS
+        // ========================================
+
+        const missPoint = muzzlePos.clone().add(
+            shootDirection.clone()
+                .multiplyScalar(200)
+        );
+
+        createBulletTracer(
+            muzzlePos,
+            missPoint,
+            currentWeapon
+        );
     }
 
-    // Recoil
-    camera.rotation.x -= 0.015 + Math.random() * 0.01;
-    camera.rotation.y += (Math.random() - 0.5) * 0.012;
+    // ============================================
+    // MULTIPLAYER SYNC
+    // ============================================
 
-    // Multiplayer sync
     if (gameMode === 'multiplayer') {
+
         const myPlayer = Playroom.myPlayer();
+
         if (myPlayer) {
-            myPlayer.setState('isShooting', true);
-            setTimeout(() => myPlayer.setState('isShooting', false), 60);
+
+            myPlayer.setState(
+                'isShooting',
+                true
+            );
+
+            setTimeout(() => {
+
+                myPlayer.setState(
+                    'isShooting',
+                    false
+                );
+
+            }, 60);
         }
     }
 }
+
+// ============================================================================
+// GET SHOOTABLE OBJECTS
+// ============================================================================
+
 function getShootableObjects() {
+
     return scene.children.filter(obj => {
-        if (rifleModel && (obj === rifleModel || rifleModel.children.includes(obj))) return false;
-        if (pistolModel && (obj === pistolModel || pistolModel.children.includes(obj))) return false;
+
+        // Ignore rifle
+        if (rifleModel) {
+
+            let current = obj;
+
+            while (current) {
+
+                if (current === rifleModel) {
+                    return false;
+                }
+
+                current = current.parent;
+            }
+        }
+
+        // Ignore pistol
+        if (pistolModel) {
+
+            let current = obj;
+
+            while (current) {
+
+                if (current === pistolModel) {
+                    return false;
+                }
+
+                current = current.parent;
+            }
+        }
+
         return true;
     });
 }
 
-// Auto-reload when trying to shoot with empty mag (already handled in shoot())
+// ============================================================================
+// RELOAD
+// ============================================================================
+
 function reload() {
+
     if (isReloading) return;
 
-    const reserve = currentWeapon === 'rifle' ? rifleReserve : pistolReserve;
-    const maxAmmo = currentWeapon === 'rifle' ? 30 : 17;
-    const currentAmmo = currentWeapon === 'rifle' ? rifleAmmo : pistolAmmo;
+    const reserve =
+        currentWeapon === 'rifle'
+            ? rifleReserve
+            : pistolReserve;
 
-    if (reserve <= 0 || currentAmmo === maxAmmo) return;
+    const maxAmmo =
+        currentWeapon === 'rifle'
+            ? 30
+            : 17;
+
+    const currentAmmo =
+        currentWeapon === 'rifle'
+            ? rifleAmmo
+            : pistolAmmo;
+
+    // No reload needed
+    if (
+        reserve <= 0 ||
+        currentAmmo === maxAmmo
+    ) {
+        return;
+    }
 
     isReloading = true;
-    document.getElementById('reloadIndicator').style.display = 'block';
 
-    // Reload animation (camera shake)
-    const originalRot = { x: camera.rotation.x, y: camera.rotation.y };
+    document.getElementById(
+        'reloadIndicator'
+    ).style.display = 'block';
+
+    // ============================================
+    // RELOAD SHAKE
+    // ============================================
+
+    const originalRot = {
+        x: camera.rotation.x,
+        y: camera.rotation.y
+    };
+
     const shake = setInterval(() => {
-        camera.rotation.x = originalRot.x + (Math.random() - 0.5) * 0.04;
-        camera.rotation.y = originalRot.y + (Math.random() - 0.5) * 0.02;
+
+        camera.rotation.x =
+            originalRot.x +
+            (Math.random() - 0.5) * 0.04;
+
+        camera.rotation.y =
+            originalRot.y +
+            (Math.random() - 0.5) * 0.02;
+
     }, 50);
 
-    setTimeout(() => {
-        clearInterval(shake);
-        camera.rotation.x = originalRot.x;
-        camera.rotation.y = originalRot.y;
+    // ============================================
+    // FINISH RELOAD
+    // ============================================
 
-        const needed = maxAmmo - currentAmmo;
-        const toReload = Math.min(needed, reserve);
+    setTimeout(() => {
+
+        clearInterval(shake);
+
+        camera.rotation.x =
+            originalRot.x;
+
+        camera.rotation.y =
+            originalRot.y;
+
+        const needed =
+            maxAmmo - currentAmmo;
+
+        const toReload =
+            Math.min(needed, reserve);
 
         if (currentWeapon === 'rifle') {
+
             rifleAmmo += toReload;
             rifleReserve -= toReload;
+
         } else {
+
             pistolAmmo += toReload;
             pistolReserve -= toReload;
         }
 
         isReloading = false;
-        document.getElementById('reloadIndicator').style.display = 'none';
+
+        document.getElementById(
+            'reloadIndicator'
+        ).style.display = 'none';
+
         updateHUD();
-    }, 1800); // 1.8 seconds reload time
+
+    }, 1800);
 }
 
+// ============================================================================
+// SWITCH WEAPON
+// ============================================================================
+
 function switchWeapon(direction = 'next') {
-    const weaponCycle = ['rifle', 'pistol'];
-    let currentIndex = weaponCycle.indexOf(currentWeapon);
+
+    const weaponCycle = [
+        'rifle',
+        'pistol'
+    ];
+
+    let currentIndex =
+        weaponCycle.indexOf(
+            currentWeapon
+        );
 
     if (direction === 'next') {
-        currentIndex = (currentIndex + 1) % weaponCycle.length;
+
+        currentIndex =
+            (currentIndex + 1)
+            % weaponCycle.length;
+
     } else {
-        currentIndex = (currentIndex - 1 + weaponCycle.length) % weaponCycle.length;
+
+        currentIndex =
+            (currentIndex - 1 + weaponCycle.length)
+            % weaponCycle.length;
     }
 
-    currentWeapon = weaponCycle[currentIndex];
+    currentWeapon =
+        weaponCycle[currentIndex];
+
+    // IMPORTANT
+    updateCurrentWeapon(currentWeapon);
 
     if (rifleModel && pistolModel) {
-        rifleModel.visible = (currentWeapon === 'rifle');
-        pistolModel.visible = (currentWeapon === 'pistol');
 
-        // FIX: Reset aiming state when switching weapons
+        rifleModel.visible =
+            currentWeapon === 'rifle';
+
+        pistolModel.visible =
+            currentWeapon === 'pistol';
+
         isAiming = false;
+
         updateWeaponPosition();
     }
 
@@ -1037,16 +1342,6 @@ function checkJumpPadBoost() {
             createJumpEffect(pad.body.position); // Optional visual effect
         }
     }
-}
-
-function createMuzzleFlash(position) {
-    const geometry = new THREE.SphereGeometry(0.1, 8, 8);
-    const material = new THREE.MeshBasicMaterial({ color: 0xffff00 });
-    const flash = new THREE.Mesh(geometry, material);
-    flash.position.copy(position);
-    scene.add(flash);
-
-    setTimeout(() => scene.remove(flash), 50);
 }
 
 function createImpactEffect(position) {
@@ -1240,10 +1535,6 @@ function gameLoop() {
             playerBody.velocity.x *= 0.1;
             playerBody.velocity.z *= 0.1;
         }
-
-        // 5. Finalize Camera Position
-        camera.position.x = playerBody.position.x;
-        camera.position.z = playerBody.position.z;
 
         // Check for "Grounding" to allow jumping
         if (Math.abs(playerBody.velocity.y) < 0.01) {
